@@ -10,6 +10,7 @@ using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AdminWebApplication.Controllers
 {
@@ -61,6 +62,7 @@ namespace AdminWebApplication.Controllers
         {
             if (ModelState.IsValid)
             {
+                //await productService.AddProduct(productDto,"Admin@gmail.com");
                 var product = new Product
                 {
                     Name = productDto.Name,
@@ -109,6 +111,8 @@ namespace AdminWebApplication.Controllers
 
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
+
+
                 return RedirectToAction(nameof(Index));
             }
             var brands = _context.Brands.ToList();
@@ -150,7 +154,7 @@ namespace AdminWebApplication.Controllers
             }
             var brands = await brandService.GetAllBrandsAsync();
             ViewData["BrandId"] = new SelectList(brands, "Id", "Name");
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             return View(product);
         }
 
@@ -158,37 +162,82 @@ namespace AdminWebApplication.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Price,PictureUrl,QuantityInStock,CategoryId,BrandId,Id, Discount")] Product product)
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id,[FromForm]ProductDto productDto)
         {
-            if (id != product.Id)
-            {
+            //if (id != product.Id)
+            //{
+            //    return NotFound();
+            //}
+
+            if (productDto.Discount.DiscountPercentage is null)
+                productDto.Discount = null;
+            else
+                productDto.Discount.DiscountPercentage /= 100;
+
+            var currentProduct = _context.Products.Find(id);
+            if (currentProduct == null)
                 return NotFound();
+
+            // Define the main image folder path
+            var apiProjectDirectory = GetApiProjectDirectory();
+
+            string mainImageFolder = Path.Combine(apiProjectDirectory, "wwwroot", "Files", "productImages");
+            if (!Directory.Exists(mainImageFolder))
+            {
+                Directory.CreateDirectory(mainImageFolder);
+            }
+
+            if (productDto.ImageFile != null)
+            {   
+                var mainImageFileName = $"{Guid.NewGuid()}-{Path.GetFileName(productDto.ImageFile.FileName)}";
+                var mainImageFilePath = Path.Combine(mainImageFolder, mainImageFileName);
+                using var mainImageFileStream = new FileStream(mainImageFilePath, FileMode.Create);
+                await productDto.ImageFile.CopyToAsync(mainImageFileStream);
+                currentProduct.PictureUrl = mainImageFileName;
+            }
+
+            if (productDto.ImagesFiles != null && productDto.ImagesFiles.Count > 0)
+            {
+                foreach (var item in currentProduct.Images.ToList())
+                {
+                    _context.Remove(item);
+                    _context.SaveChanges();
+                }
+                foreach (var image in currentProduct.Images)
+                {
+                    var additionalImagePath = Path.Combine(mainImageFolder, image.ImagePath);
+                    if (System.IO.File.Exists(additionalImagePath))
+                    {
+                        System.IO.File.Delete(additionalImagePath);
+                    }
+                }
+                foreach (var image in productDto.ImagesFiles)
+                {
+                    var additionalImageFileName = $"{Guid.NewGuid()}-{Path.GetFileName(image.FileName)}";
+                    var additionalImageFilePath = Path.Combine(mainImageFolder, additionalImageFileName);
+                    using var additionalImageFileStream = new FileStream(additionalImageFilePath, FileMode.Create);
+                    await image.CopyToAsync(additionalImageFileStream);
+                    currentProduct.Images.Add(new ProductImages
+                    {
+                        ImagePath = additionalImageFileName
+                    });
+                }
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProductExists(product.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                productDto.ImageFile = null;
+                productDto.ImagesFiles = null;
+                var result = await productService.UpdateProduct(id, productDto);
+                if (result is null)
+                    return NotFound();
+              
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "Id", product.BrandId);
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", product.CategoryId);
-            return View(product);
+            ViewData["BrandId"] = new SelectList(_context.Brands, "Id", "name", productDto.BrandId);
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "name", productDto.CategoryId);
+            return View(productDto);
         }
 
         // GET: Products/Delete/5
@@ -227,11 +276,11 @@ namespace AdminWebApplication.Controllers
             string mainImageFolder = Path.Combine(apiProjectDirectory, "wwwroot", "Files", "productImages");
 
             // Delete the main product image
-            var mainImagePath = Path.Combine(mainImageFolder, product.PictureUrl);
-            if (System.IO.File.Exists(mainImagePath))
-            {
-                System.IO.File.Delete(mainImagePath);
-            }
+            //var mainImagePath = Path.Combine(mainImageFolder, product.PictureUrl);
+            //if (System.IO.File.Exists(mainImagePath))
+            //{
+            //    System.IO.File.Delete(mainImagePath);
+            //}
 
             // Delete the additional product images
             foreach (var image in product.Images)

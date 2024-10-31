@@ -11,6 +11,8 @@ import { AccountService } from '../../Services/account.service';
 import { AddressFormComponent } from '../../Pages/address-form/address-form.component';
 import { AddressService } from '../../Services/address.service';
 import { Address } from '../../Models/address';
+import { Subscription } from 'rxjs';
+import { CategoryService } from '../../Services/category.service';
 
 @Component({
   selector: 'app-nav',
@@ -27,7 +29,9 @@ export class NavComponent implements OnInit {
     public cartService: CartService,
     private cookieService: CookieService,
     private accountService: AccountService,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private categoryService: CategoryService,
+
   ) { }
 
   addressFormVisible: boolean = false;
@@ -39,13 +43,28 @@ export class NavComponent implements OnInit {
   isAuthenticated: boolean;
   userName: string | null;
   savedAddresses: Address[] = [];
+  categories : any[] | null = [];
+  sub : Subscription | null = null;
+
+
+
+
 
   ngOnInit(): void {
     this.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
     this.userName = localStorage.getItem('userName');
 
     this.fetchSavedAddresses();
-
+    try {
+      this.sub = this.categoryService.getCategories().subscribe({
+        next: data => {
+          this.categories = data;
+          console.log(this.categories);
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     this.cartService.cartQnt.subscribe({
       next: p => { this.cartQnt = p; }

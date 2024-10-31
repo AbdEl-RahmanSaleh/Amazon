@@ -10,19 +10,19 @@
 
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control"  required/>
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <input asp-for="Description" class="form-control" required />
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
             <div class="form-group">
                 <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
+                <input asp-for="Price" class="form-control" required min="10" max="99999" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
 
@@ -31,18 +31,16 @@
                 <input type="file" class="form-control" name="ImageFile" id="ImageFile" />
             </div>
 
-            @for (int i = 0; i < 3; i++)
-            {
-                <div class="form-group">
-                    <label class="control-label">Additional Product Image (optional)</label>
-                    <input type="file" class="form-control" name="ImagesFiles" id="ImagesFiles" multiple />
-                    <small class="text-muted">Select up to 3 additional images</small>
-                </div>
-            }
+
+            <div class="form-group">
+                <label class="control-label">Additional Product Image (optional)</label>
+                <input type="file" class="form-control" name="ImagesFiles" id="ImagesFiles" multiple />
+                <small class="text-muted">Select up to 3 additional images</small>
+            </div>
 
             <div class="form-group">
                 <label asp-for="QuantityInStock" class="control-label"></label>
-                <input asp-for="QuantityInStock" class="form-control" />
+                <input asp-for="QuantityInStock" class="form-control" min="1" max="99" required />
                 <span asp-validation-for="QuantityInStock" class="text-danger"></span>
             </div>
 

@@ -12,12 +12,7 @@
       <select (change)="QNTChanged()" class="ms-2 form-select d-inline" style="width: fit-content;" id="qty3"
               [(ngModel)]="prop.quantity">
         @for (number of Quantity(10); track $index) {
-          @if(number < product.quantityInStock){
             <option>{{number}}</option>
-          }
-          @else {
-            <option disabled>{{number}}</option>
-          }
         }
       </select>
 

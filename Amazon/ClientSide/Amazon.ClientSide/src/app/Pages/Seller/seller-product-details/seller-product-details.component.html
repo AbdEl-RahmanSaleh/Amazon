@@ -4,24 +4,24 @@
       <h1>{{ product.name }}</h1>
       <p>{{ product.categoryName }} - {{ product.brandName }}</p>
     </div>
-  
+
     <div class="product-details-body">
       <div class="product-image">
         <img [src]="product.pictureUrl" alt="{{ product.name }}">
       </div>
-  
+
       <div class="product-info">
         <p><strong>Review:</strong> {{ averageRating }}</p>
         <p><strong>Price:</strong> {{ product.price | currency:"EGP" }}</p>
         <p><strong>Stock:</strong> {{ product.quantityInStock }} items</p>
         <p><strong>Description:</strong> {{ product.description }}</p>
-  
+
         <!-- Discount section if available -->
         <div *ngIf="product.discount">
-          <p><strong>Discount:</strong> {{ product.discount.discountPercentage }}%</p>
+          <p><strong>Discount:</strong> {{ product.discount.discountPercentage *100}}%</p>
           <p><strong>Discount Details:</strong> {{ product.discount.priceAfterDiscount }}</p>
         </div>
-  
+
         <!-- Additional images -->
         <div *ngIf="product.productImages.length > 0" class="additional-images">
           <h3>Additional Images</h3>
@@ -31,13 +31,12 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Back button -->
     <button (click)="goBack()">Back to Products</button>
   </div>
-  
+
   <!-- Loader or message if product not loaded yet -->
   <div *ngIf="!product">
     <p>Loading product details...</p>
   </div>
-  

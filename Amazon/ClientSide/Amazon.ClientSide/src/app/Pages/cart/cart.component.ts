@@ -99,13 +99,13 @@ export class CartComponent implements OnInit {
 
   ngOnDestroy(): void
   {
-    if (this.subCart) 
+    if (this.subCart)
       {
       this.subCart.unsubscribe();
     }
   }
 
-  getGuid(): string 
+  getGuid(): string
   {
     return this.guidServices.getGUID();
   }
@@ -118,7 +118,7 @@ export class CartComponent implements OnInit {
     }
   }
 
-  UpdateQnt(cartId: string, item: CartItem): void 
+  UpdateQnt(cartId: string, item: CartItem): void
   {
     this.productService.getProductById(item.id).subscribe({
       next: p =>{
@@ -129,18 +129,18 @@ export class CartComponent implements OnInit {
     this.loading = false;
   }
 
-  TotalPrice() 
+  TotalPrice()
   {
     let TotalPrice = 0;
-    if (this.cartItems != null) 
+    if (this.cartItems != null)
     {
       this.cartItems.forEach((item) => {
         TotalPrice += Number(item.price * item.quantity);
       });
-      // this.cookieService.set("cart-total-price", TotalPrice.toFixed(2), { expires: 7, path: '/' }); 
+      // this.cookieService.set("cart-total-price", TotalPrice.toFixed(2), { expires: 7, path: '/' });
       return TotalPrice.toFixed(2);
     }
-    // this.cookieService.set("cart-total-price", TotalPrice.toFixed(2), { expires: 7, path: '/' }); 
+    // this.cookieService.set("cart-total-price", TotalPrice.toFixed(2), { expires: 7, path: '/' });
     return TotalPrice.toFixed(2);
   }
 }

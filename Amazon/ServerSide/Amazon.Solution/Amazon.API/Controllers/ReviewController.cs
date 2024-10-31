@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Identity;
 using Amazon.Core.Entities.Identity;
 using Amazon.Core.Entities;
 
-[Authorize]
 public class ReviewController : BaseController
 {
 	private readonly IReviewService _reviewService;

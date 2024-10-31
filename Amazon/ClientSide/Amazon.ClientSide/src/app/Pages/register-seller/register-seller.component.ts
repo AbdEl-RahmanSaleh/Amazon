@@ -28,7 +28,7 @@ export class SellerRegisterComponent implements OnInit{
       'sellerName' : new FormControl(null, [Validators.required]),
       'email': new FormControl(null, [Validators.required, Validators.email]),
       'username': new FormControl(null, Validators.required),
-      'phonenumber': new FormControl(null, [Validators.required, Validators.minLength(11), Validators.maxLength(11), Validators.pattern("/^\d+$/")]),
+      'phonenumber': new FormControl(null, [Validators.required, Validators.minLength(11), Validators.maxLength(11), Validators.pattern(/^01[0125][0-9]{8}$/)]),
       'password': new FormControl(null, Validators.required),
       'confirmpassword': new FormControl(null, Validators.required)
     });
@@ -62,5 +62,9 @@ export class SellerRegisterComponent implements OnInit{
     {
       this.isMatched = false;
     }
+  }
+  validateNumberInput(input)
+  {
+
   }
 }

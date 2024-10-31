@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 namespace Amazon.Core.Entities
 {
     public class Product : BaseEntity
@@ -34,7 +35,8 @@ namespace Amazon.Core.Entities
         [NotMapped]
         public ICollection<IFormFile> ImagesFiles { get; set; }
 
-        public virtual Discount Discount { get; set; }
+        [AllowNull]
+        public virtual Discount? Discount { get; set; }
 
         public virtual ICollection<Review> Reviews { get; set; } = [];
 

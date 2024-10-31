@@ -18,6 +18,13 @@
                         <div style="display: inline-block;">
                             <i class="fas fa-map-marker-alt" style="color: white; padding: 10px; border-radius: 50%;"></i>
                         </div>
+                        @if (savedAddresses == null) {
+                          <div style="text-align: left; width: 120px; overflow: hidden; text-overflow: ellipsis; text-wrap: nowrap;">
+                            <span style="font-size: 12px;">Deliever to</span> <br>
+                        </div>
+                      }
+                        @else {
+
                         <div style="text-align: left; width: 120px; overflow: hidden; text-overflow: ellipsis; text-wrap: nowrap;">
                           @if (savedAddresses.length <= 0)
                           {
@@ -29,6 +36,7 @@
                             {{savedAddresses[0].city}}
                           }
                         </div>
+                      }
                     </button>
 
 
@@ -45,12 +53,18 @@
 
                 <select name="" id="" #Category>
                     <option value="All">All</option>
-                    <option value="1">Phones</option>
+                    <!-- <option value="1">Phones</option>
                     <option value="2">Laptops</option>
                     <option value="3">Tablets</option>
                     <option value="4">Air Conditioners</option>
                     <option value="5">Washing Machines</option>
-                    <option value="6">Ovens</option>
+                    <option value="6">Ovens</option> -->
+                    @for (Category of categories; track $index) {
+
+                      <option value="{{Category.id}}">{{Category.name}}</option>
+
+                    }
+
                 </select>
                 <input #query type="search" name="" id="search" class="form-control" placeholder="Search"
                     (keyup.enter)="search(query.value)" />
@@ -94,7 +108,7 @@
                             <h5>Your Account</h5>
                             <a href="#">Your Account</a>
                             <a routerLink="/Your-Orders">Your Orders</a>
-                            <a href="#">Your Addresses</a>
+                            <a [routerLink]="['/manage-address-book']">Your Addresses</a>
                             <a href="#">Your Lists</a>
                             <a [routerLink]="['/seller/product-list']">Your Seller Account</a>
                             @if(isAuthenticated)

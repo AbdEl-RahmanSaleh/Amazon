@@ -61,8 +61,8 @@ namespace Amazon.Services.PaymentService
 
                 if (product?.Discount != null &&
                     product.Discount.DiscountStarted && 
-                    product.Discount.StartDate <= DateTime.UtcNow &&  
-                    product.Discount.EndDate >= DateTime.UtcNow) 
+                    product.Discount.StartDate.Date <= DateTime.Now &&  
+                    product.Discount.EndDate >= DateTime.Now) 
                 {
                     if (product.Discount.PriceAfterDiscount.HasValue)
                     {
@@ -87,7 +87,7 @@ namespace Amazon.Services.PaymentService
                 {
                     Amount = (long)cart.Items.Sum(i => i.Quantity * (i.Price * 100)) +
                         (long)shippingCost * 100,
-                    Currency = "usd",
+                    Currency = "egp",
                     PaymentMethodTypes = new List<string> {"card"}
                 };
                 intent = await service.CreateAsync(options);

@@ -65,7 +65,7 @@ namespace Amazon.API.Controllers
 		}
 
 		[HttpDelete("{id}")]
-		public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> DeleteProduct(int id)
+		public async Task<ActionResult> DeleteProduct(int id)
 		{
 			var sellerEmail = User.FindFirstValue("Email");
 
@@ -80,7 +80,7 @@ namespace Amazon.API.Controllers
 			if (result is false)
 				return BadRequest(new ApiResponse(400, "Can't Delete This Product"));
 
-			return Ok("Product Deleted Successfully");
+			return Ok(new { message = "Product Deleted Successfully" });
 
 		}
 

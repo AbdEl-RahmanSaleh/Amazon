@@ -7,18 +7,19 @@
             <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Email" formControlName="email">
             <span *ngIf="!registerForm.get('email').valid && registerForm.get('email').touched" class="text-danger">Email is Invalid</span>
         </div>
-        
+
         <div class="mb-3">
             <label for="formGroupExampleInput2" class="form-label">User Name</label>
             <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="User Name" formControlName="username">
             <span *ngIf="!registerForm.get('username').valid && registerForm.get('username').touched" class="text-danger">User Name is Invalid</span>
         </div>
-        
+
         <div class="mb-3">
             <label for="phonenumber" class="form-label">Phone Number</label>
             <input type="text" class="form-control" pattern="\d*" minlength="11" maxlength="11" id="phonenumber" placeholder="Phone Number" formControlName="phonenumber">
             <span *ngIf="!registerForm.get('phonenumber').valid && registerForm.get('phonenumber').touched" class="text-danger">Phone Number must be 11 charchter & Numbers Only</span>
         </div>
+        
         <div class="mb-3">
             <label for="Password" class="form-label">Password</label>
             <input type="password" class="form-control" id="Password" placeholder="Password" formControlName="password">
@@ -27,17 +28,17 @@
             <label for="confirmpassword" class="form-label">Confirm Password</label>
             <input type="password" class="form-control" id="confirmpassword" placeholder="Rewrite Password" formControlName="confirmpassword">
         </div>
-        
+
         <span *ngIf="!isMatched" class="text-danger">Passwords Do Not Match</span>
 
         <button type="submit" class="p-1 mb-2">Register</button>
-        <span>By signing in, you agree to Amazon's 
+        <span>By signing in, you agree to Amazon's
             <a href="/gp/help/customer/display.html/ref=ap_signin_notification_condition_of_use?ie=UTF8&nodeId=201909000" class="mx-1">Conditions of Use</a>
                 and
                 <a href="/gp/help/customer/display.html/ref=ap_signin_notification_privacy_notice?ie=UTF8&nodeId=201909010" class="mx-1">Privacy Notice</a>.
             </span>
         </form>
-        
+
     <div class="mt-4 mb-2 line-container">
         <div class="line"></div>
         Already on Amazon?
@@ -47,7 +48,7 @@
     <a routerLink="/login" class="p-1">Sign in to your Amazon account</a>
 
     <div class="a-divider-inner"></div>
-    
+
 </main>
 
 <div id="fullScreenModal" class="modal" [style.display]="isValidated ? 'block' : 'none'">

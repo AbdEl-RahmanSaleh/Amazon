@@ -63,7 +63,7 @@ export class SellerProductListComponent implements OnInit {
     this.sellerService.GetSellerAcceptedProducts().subscribe({
       next: (datas) => {
         datas.forEach((elm) =>{
-          this.averagePrice +=elm.price;          
+          this.averagePrice +=elm.price;
         })
         this.averagePrice =this.averagePrice / datas.length
         datas.forEach((elm) => {
@@ -82,7 +82,7 @@ export class SellerProductListComponent implements OnInit {
       next: (data) => {
         console.log('asdadadadadaadsadd:', data);
         data.forEach((elm) =>{
-          this.SoldNumber +=elm.quantitySold;          
+          this.SoldNumber +=elm.quantitySold;
         })
 
       },
@@ -118,17 +118,35 @@ export class SellerProductListComponent implements OnInit {
     this.selectedProductId = id;
   }
 
+  // deleteProduct(id: number): void {
+  //   this.sellerService.DeleteProduct(id).subscribe({
+  //     next: () => {
+  //       this.products = this.products.filter((product) => product.id !== id);
+  //       this.toastr.success('Product Delete Successfully');
+  //     },
+  //     error: (error) => {
+  //       console.log(error);
+  //       this.toastr.error('Can\'t Delete this product, still delivering ', 'Can\'t Delete', {
+  //         positionClass: 'toast-bottom-right',
+  //     });
+  //   },
+  //   });
+  // }
+
   deleteProduct(id: number): void {
-    this.sellerService.DeleteProduct(id).subscribe({
-      next: () => {
-        this.products = this.products.filter((product) => product.id !== id);
-      },
-      error: (error) => {
-        this.toastr.error('Can\'t Delete this product, still delivering ', 'Can\'t Delete', {
-          positionClass: 'toast-bottom-right',
-        });      },
-    });
-  }
+  this.sellerService.DeleteProduct(id).subscribe({
+    next: () => {
+      this.products = this.products.filter((product) => product.id !== id);
+      this.toastr.success('Product Deleted Successfully');
+    },
+    error: (error) => {
+      console.error(error);
+      this.toastr.error("Can't Delete this product, still delivering", "Can't Delete", {
+        positionClass: 'toast-bottom-right',
+      });
+    },
+  });
+}
 
   signOut(): void {
     localStorage.clear();

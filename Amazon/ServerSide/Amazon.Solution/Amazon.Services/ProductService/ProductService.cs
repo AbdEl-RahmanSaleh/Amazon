@@ -49,10 +49,15 @@ namespace Amazon.Services.ProductService
 			}
 			var product = _mapper.Map<Product>(productDto);
 			product.PictureUrl = await DocumentSettings.UploadFile(productDto.ImageFile, "productImages");
-			product.IsAccepted = false;
+
 			product.QuantitySold = 0 ;
 			product.SellerEmail = seller.Email;
 			product.SellerName = seller.SellerName;
+            if (product.SellerEmail == "Admin@gmail.com")
+                product.IsAccepted = true;
+            else
+                product.IsAccepted = false;
+			
 				
 			await HandleProductImages(productDto.ImagesFiles, product);
 
@@ -70,11 +75,11 @@ namespace Amazon.Services.ProductService
 			if (existintProduct == null)
 				return null;
 
-			if (productDto.ImageFile != null)
-			{
-				DocumentSettings.DeleteFile("productImages", existintProduct.PictureUrl);
-				existintProduct.PictureUrl = await DocumentSettings.UploadFile(productDto.ImageFile, "productImages");
-			}
+			//if (productDto.ImageFile != null)
+			//{
+			//	DocumentSettings.DeleteFile("productImages", existintProduct.PictureUrl);
+			//	existintProduct.PictureUrl = await DocumentSettings.UploadFile(productDto.ImageFile, "productImages");
+			//}
 
 			if (productDto.ImagesFiles != null && productDto.ImagesFiles.Count > 0)
 			{
@@ -94,7 +99,10 @@ namespace Amazon.Services.ProductService
 				}
 				productDto.Discount.PriceAfterDiscount = productDto.Price * (1 - productDto.Discount.DiscountPercentage);
 			}
-			existintProduct.IsAccepted = false;
+			if (existintProduct.SellerEmail == "Admin@gmail.com")
+				existintProduct.IsAccepted = true;
+			else
+				existintProduct.IsAccepted = false;
 			_mapper.Map(productDto, existintProduct);
 
 			await _productRepo.Update(existintProduct);
@@ -111,6 +119,7 @@ namespace Amazon.Services.ProductService
 
 			var orders = await _orderRepo.GetAllAsync();
 			var productOrders = orders.Where(o => o.Items.Any(i => i.Product.ProductId == product.Id));
+			
 			if (productOrders != null || productOrders.Any())
 			{
 				var pendingOrders = productOrders.Where(o => o.OrderStatus == OrderStatus.Pending).ToList();
@@ -119,7 +128,7 @@ namespace Amazon.Services.ProductService
 					return false;
 			}
 
-			DocumentSettings.DeleteFile("productImages", product.PictureUrl);
+			//DocumentSettings.DeleteFile("productImages", product.PictureUrl);
 			foreach (var item in product.Images)
 			{
 				DocumentSettings.DeleteFile("productImages", item.ImagePath);

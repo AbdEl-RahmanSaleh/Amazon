@@ -125,7 +125,7 @@ namespace Amazon.API.Controllers
 				if (result.Succeeded)
 				{
 					var currentUser = await GetCurrentUser(userId);
-					return Redirect($"http://localhost:4200/?token={currentUser.Token}");
+					return Redirect($"http://localhost:4200/login");
 				}
 			}
 			else

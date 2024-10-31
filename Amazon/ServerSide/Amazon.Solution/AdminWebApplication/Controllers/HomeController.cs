@@ -29,15 +29,16 @@ namespace AdminWebApplication.Controllers
             var categories = amazonDbContext.Categories.Count();
             var lowQuantityProducts = products.Where(p => p.QuantityInStock < 10).ToList();
 
-            var orderItems = amazonDbContext.OrderItems.GroupBy(o => o.Product.ProductId)
-                .Select(g => new 
-                {
-                    Id = g.Key, 
-                    Name = g.First().Product.ProductName, 
-                    TotalQuantity = g.Sum(s => s.Quantity)
-                }).OrderByDescending(o => o.TotalQuantity).ToList();
+            //var orderItems = amazonDbContext.OrderItems.GroupBy(o => o.Product.ProductId)
+            //    .Select(g => new 
+            //    {
+            //        Id = g.Key, 
+            //        Name = g.First().Product.ProductName, 
+            //        TotalQuantity = g.Sum(s => s.Quantity)
+            //    }).OrderByDescending(o => o.TotalQuantity).ToList();
 
 
+            var orderItems = products.Where(p => p.QuantitySold > 0).OrderByDescending(p => p.QuantitySold);
             ViewBag.TopOrders = orderItems;
 
             DashboardData data = new()

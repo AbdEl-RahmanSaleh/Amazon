@@ -7,6 +7,7 @@
             <input type="text" class="form-control" id="formGroupExampleInput" placeholder="sellerName" formControlName="sellerName">
             <span *ngIf="!registerForm.get('sellerName').valid && registerForm.get('sellerName').touched" class="text-danger">sellerName is invalid</span>
         </div>
+
         <div class="mb-3">
             <label for="formGroupExampleInput" class="form-label">Email</label>
             <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Email" formControlName="email">
@@ -18,11 +19,18 @@
             <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="User Name" formControlName="username">
         </div>
 
-        <div class="mb-3">
+        <!-- <div class="mb-3">
             <label for="phonenumber" class="form-label">Phone Number</label>
             <input type="text" class="form-control" minlength="11" maxlength="11" id="phonenumber" placeholder="Phone Number" formControlName="phonenumber">
             <span *ngIf="!registerForm.get('phonenumber').valid && registerForm.get('phonenumber').touched" class="text-danger">Phone Number must be 11 charchter and Numbers Only</span>
+        </div> -->
+
+        <div class="mb-3">
+            <label for="phonenumber" class="form-label">Phone Number</label>
+            <input type="text" class="form-control" pattern="\d*" minlength="11" maxlength="11" id="phonenumber" placeholder="Phone Number" formControlName="phonenumber">
+            <span *ngIf="!registerForm.get('phonenumber').valid && registerForm.get('phonenumber').touched" class="text-danger">Phone Number must be 11  Number Only</span>
         </div>
+
         <div class="mb-3">
             <label for="Password" class="form-label">Password</label>
             <input type="password" class="form-control" id="Password" placeholder="Password" formControlName="password">
